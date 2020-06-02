@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <div class="post" v-for="post in posts" :key="post.id">
+    <div class="post" v-for="post in posts" :key="post.id" @click="navTo(post.url)">
+      <img :src="post.urlToImage" />
       <h2>{{post.title}}</h2>
       <p>{{post.description}}</p>
     </div>
@@ -15,6 +16,11 @@ export default {
     return {
       posts: []
     }
+  },
+  methods: {
+    navTo(url) {
+            window.open(url);
+      }, 
   },
   async mounted() {
    const res = await fetch('http://newsapi.org/v2/top-headlines?' +
@@ -36,6 +42,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin: 60px auto;
+  width: 400px;
+}
+
+img {
   width: 400px;
 }
 
