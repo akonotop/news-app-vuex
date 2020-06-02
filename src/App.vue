@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <div class="post" v-for="post in allPosts" :key="post.id" @click="navTo(post.url)">
-      <img :src="post.urlToImage" />
-      <!-- v-if="article.urlToImage" :src="article.urlToImage" alt="" -->
+    <div class="post" v-for="post in posts" :key="post.id">
       <h2>{{post.title}}</h2>
       <p>{{post.description}}</p>
     </div>
@@ -10,17 +8,23 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex'
+
 export default {
   name: 'App',
-  computed: mapGetters(['allPosts']),
-  methods: mapActions(['fetchPosts']), 
-      navTo(url) {
-        window.open(url);
-      },    
-      async mounted() {
-      this.fetchPosts();
-  } 
+  data() {
+    return {
+      posts: []
+    }
+  },
+  async mounted() {
+   const res = await fetch('http://newsapi.org/v2/top-headlines?' +
+          'sources=bbc-news&' +
+          'apiKey=da9ac2bdfbcf4ccda4ec72394fd5cdb5');
+
+          const posts = await res.json()
+          this.posts = posts.articles;
+  }
+ 
 }
 </script>
 
@@ -32,10 +36,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin: 60px auto;
-  width: 400px;
-}
-
-img {
   width: 400px;
 }
 
